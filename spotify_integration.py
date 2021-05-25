@@ -21,8 +21,18 @@ def is_spotify_link(string):
 
 
 def add_to_spotify_playlist(track_link, playlist_url):
-    sp.playlist_add_items(playlist_url, [track_link])
+    sp.playlist_add_items(playlist_url, [track_link], position=0)
 
 
-# search_results = sp.search(args, type='track')
-    # print(search_results)
+def get_song_search_term(track_link):
+    track_details = sp.track(track_link)
+    song_name = track_details['name']
+    artist_name = track_details['artists'][0]['name']
+    search_term = f'{song_name} {artist_name}'
+    return search_term
+
+
+def search_for_track_url(search_term):
+    result = sp.search(search_term, limit=1, type='track')
+    track_url = result['tracks']['items'][0]['external_urls']['spotify']
+    return track_url
