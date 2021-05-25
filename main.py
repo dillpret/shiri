@@ -3,10 +3,12 @@ import os
 from dotenv import load_dotenv
 from discord.ext import commands
 import spotify_integration
+import deezer_integration
 
 load_dotenv()
 
-TOKEN = os.getenv('DISCORD_TOKEN')
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+DEEZER_TOKEN = os.getenv('DEEZER_TOKEN')
 PREFIX = os.getenv('COMMAND_PREFIX')
 SPOTIFY_PLAYLIST_URL = os.getenv('SPOTIFY_PLAYLIST_URL')
 
@@ -28,8 +30,12 @@ async def share(ctx, args):
     else:
         await ctx.send('Sorry, that\'s not a valid Spotify link.')
 
-    # search_results = sp.search(args, type='track')
-    # print(search_results)
+
+@bot.command(name='dsh')
+async def deezer_share(ctx, args):
+    conf_message = f'Attempting to share on deezer: {args}'
+    print(conf_message)
+    deezer_integration.add_to_deezer_playlist(DEEZER_TOKEN, args)
 
 
 @bot.event
@@ -40,13 +46,4 @@ async def on_ready():
         print(f' - {guild.name}:{guild.id}')
 
 
-# @bot.event
-# async def on_message(message):
-#     if message.author == bot.user:
-#         return
-#
-#     if message.content == 'some song':
-#         await message.channel.send('Here I will send link')
-
-
-bot.run(TOKEN)
+bot.run(DISCORD_TOKEN)

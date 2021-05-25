@@ -22,3 +22,7 @@ def is_spotify_link(string):
 
 def add_to_spotify_playlist(track_link, playlist_url):
     sp.playlist_add_items(playlist_url, [track_link])
+
+
+# search_results = sp.search(args, type='track')
+    # print(search_results)
