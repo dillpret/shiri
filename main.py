@@ -2,37 +2,15 @@
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-import re
+import spotify_integration
 
 load_dotenv()
+
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('COMMAND_PREFIX')
 SPOTIFY_PLAYLIST_URL = os.getenv('SPOTIFY_PLAYLIST_URL')
 
-SPOTIFY_ACCESS_TOKEN_URL = "https://accounts.spotify.com/api/token"
-SPOTIFY_SEARCH_URL = "https://api.spotify.com/v1/search"
-
-scope = "playlist-modify-public"
-auth_manager = SpotifyOAuth(scope=scope)
-sp = spotipy.Spotify(auth_manager=auth_manager)
-
-
 bot = commands.Bot(command_prefix='>')
-
-
-def add_to_spotify_playlist(track_link):
-    sp.playlist_add_items(SPOTIFY_PLAYLIST_URL, [track_link])
-
-
-def is_spotify_link(string):
-    print(string)
-    regex = r'^(spotify:|https://[a-z]+\.spotify\.com/)'
-    if re.search(regex, string):
-        return True
-    else:
-        return False
 
 
 @bot.command(name='hey')
@@ -45,8 +23,8 @@ async def greet(ctx):
 async def share(ctx, args):
     conf_message = f'Attempting to share: {args}'
     print(conf_message)
-    if is_spotify_link(args):
-        add_to_spotify_playlist(args)
+    if spotify_integration.is_spotify_link(args):
+        spotify_integration.add_to_spotify_playlist(args, SPOTIFY_PLAYLIST_URL)
     else:
         await ctx.send('Sorry, that\'s not a valid Spotify link.')
 
